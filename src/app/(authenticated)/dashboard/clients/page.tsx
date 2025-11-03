@@ -84,8 +84,8 @@ const mockClients: Client[] = [
     phone: '+1 (555) 123-4567',
     company: 'TechCorp Inc.',
     status: 'active',
-    contractCount: 3,
-    lastContractDate: '2024-01-15',
+    contractCount: 2,
+    lastContractDate: '2025-01-15',
     avatar: '/avatars/john.jpg'
   },
   {
@@ -95,8 +95,8 @@ const mockClients: Client[] = [
     phone: '+1 (555) 987-6543',
     company: 'Innovate Labs',
     status: 'active',
-    contractCount: 2,
-    lastContractDate: '2024-01-10'
+    contractCount: 1,
+    lastContractDate: '2025-01-10'
   },
   {
     id: '3',
@@ -106,7 +106,7 @@ const mockClients: Client[] = [
     company: 'Global Solutions',
     status: 'inactive',
     contractCount: 1,
-    lastContractDate: '2023-12-01'
+    lastContractDate: '2025-12-01'
   }
 ];
 
@@ -114,13 +114,13 @@ const mockContracts: Contract[] = [
   {
     id: 'c1',
     clientId: '1',
-    name: 'Service Agreement - TechCorp',
+    name: 'Service Agreement - Innovate',
     type: 'Service',
     status: 'active',
-    startDate: '2024-01-01',
-    endDate: '2024-12-31',
+    startDate: '2025-01-01',
+    endDate: '2025-12-31',
     fileSize: '2.4 MB',
-    lastModified: '2024-01-15'
+    lastModified: '2025-01-15'
   },
   {
     id: 'c2',
@@ -128,10 +128,31 @@ const mockContracts: Contract[] = [
     name: 'NDA Agreement',
     type: 'NDA',
     status: 'active',
-    startDate: '2023-11-01',
+    startDate: '2025-11-01',
     fileSize: '1.1 MB',
-    lastModified: '2023-11-15'
-  }
+    lastModified: '2025-11-15'
+  },
+  {
+    id: 'c1',
+    clientId: '2',
+    name: 'Service Agreement - TechCorp',
+    type: 'Service',
+    status: 'active',
+    startDate: '2025-01-01',
+    endDate: '2025-12-31',
+    fileSize: '2.4 MB',
+    lastModified: '2025-01-15'
+  },
+   {
+    id: 'c2',
+    clientId: '3',
+    name: 'NDA Agreement',
+    type: 'NDA',
+    status: 'active',
+    startDate: '2025-11-01',
+    fileSize: '1.1 MB',
+    lastModified: '2025-11-15'
+  },
 ];
 
 export default function ClientManagement() {

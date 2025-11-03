@@ -96,7 +96,7 @@ const mockVendors: Vendor[] = [
     phone: '+1 (555) 123-4567',
     status: 'active',
     sessionCount: 12,
-    lastSessionDate: '2024-01-15'
+    lastSessionDate: '2025-01-15'
   },
   {
     id: '2',
@@ -109,7 +109,7 @@ const mockVendors: Vendor[] = [
     phone: '+44 20 1234 5678',
     status: 'active',
     sessionCount: 8,
-    lastSessionDate: '2024-01-12'
+    lastSessionDate: '2025-01-12'
   },
   {
     id: '3',
@@ -122,7 +122,7 @@ const mockVendors: Vendor[] = [
     phone: '+81 3 1234 5678',
     status: 'inactive',
     sessionCount: 5,
-    lastSessionDate: '2023-12-01'
+    lastSessionDate: '2025-12-01'
   },
   {
     id: '4',
@@ -135,7 +135,7 @@ const mockVendors: Vendor[] = [
     phone: '+1 (555) 234-5678',
     status: 'active',
     sessionCount: 15,
-    lastSessionDate: '2024-01-14'
+    lastSessionDate: '2025-01-14'
   },
   {
     id: '5',
@@ -148,7 +148,7 @@ const mockVendors: Vendor[] = [
     phone: '+49 30 1234 5678',
     status: 'active',
     sessionCount: 10,
-    lastSessionDate: '2024-01-10'
+    lastSessionDate: '2025-01-10'
   },
   {
     id: '6',
@@ -161,7 +161,7 @@ const mockVendors: Vendor[] = [
     phone: '+1 (555) 345-6789',
     status: 'active',
     sessionCount: 7,
-    lastSessionDate: '2024-01-13'
+    lastSessionDate: '2025-01-13'
   },
   {
     id: '7',
@@ -174,7 +174,7 @@ const mockVendors: Vendor[] = [
     phone: '+61 2 1234 5678',
     status: 'inactive',
     sessionCount: 3,
-    lastSessionDate: '2023-11-20'
+    lastSessionDate: '2025-11-20'
   },
   {
     id: '8',
@@ -187,7 +187,7 @@ const mockVendors: Vendor[] = [
     phone: '+33 1 1234 5678',
     status: 'active',
     sessionCount: 9,
-    lastSessionDate: '2024-01-11'
+    lastSessionDate: '2025-01-11'
   },
   {
     id: '9',
@@ -200,7 +200,7 @@ const mockVendors: Vendor[] = [
     phone: '+1 (555) 456-7890',
     status: 'active',
     sessionCount: 6,
-    lastSessionDate: '2024-01-09'
+    lastSessionDate: '2025-01-09'
   },
   {
     id: '10',
@@ -213,7 +213,7 @@ const mockVendors: Vendor[] = [
     phone: '+44 20 2345 6789',
     status: 'active',
     sessionCount: 11,
-    lastSessionDate: '2024-01-08'
+    lastSessionDate: '2025-01-08'
   },
   {
     id: '11',
@@ -226,7 +226,7 @@ const mockVendors: Vendor[] = [
     phone: '+65 6123 4567',
     status: 'inactive',
     sessionCount: 4,
-    lastSessionDate: '2023-12-15'
+    lastSessionDate: '2025-12-15'
   },
   {
     id: '12',
@@ -239,7 +239,7 @@ const mockVendors: Vendor[] = [
     phone: '+1 (555) 567-8901',
     status: 'active',
     sessionCount: 13,
-    lastSessionDate: '2024-01-16'
+    lastSessionDate: '2025-01-16'
   },
   {
     id: '13',
@@ -252,7 +252,7 @@ const mockVendors: Vendor[] = [
     phone: '+49 40 1234 5678',
     status: 'active',
     sessionCount: 8,
-    lastSessionDate: '2024-01-07'
+    lastSessionDate: '2025-01-07'
   },
   {
     id: '14',
@@ -265,7 +265,7 @@ const mockVendors: Vendor[] = [
     phone: '+61 3 1234 5678',
     status: 'active',
     sessionCount: 14,
-    lastSessionDate: '2024-01-17'
+    lastSessionDate: '2025-01-17'
   },
   {
     id: '15',
@@ -278,7 +278,7 @@ const mockVendors: Vendor[] = [
     phone: '+1 (555) 678-9012',
     status: 'inactive',
     sessionCount: 2,
-    lastSessionDate: '2023-11-30'
+    lastSessionDate: '2025-11-30'
   }
 ];
 
@@ -289,11 +289,11 @@ const mockSessions: Session[] = [
     name: 'IT Infrastructure Review',
     type: 'Consultation',
     status: 'completed',
-    sessionDate: '2024-01-15',
+    sessionDate: '2025-01-15',
     duration: '2 hours',
     rate: 150,
     totalAmount: 300,
-    lastModified: '2024-01-15'
+    lastModified: '2025-01-15'
   },
   {
     id: 's2',
@@ -301,11 +301,11 @@ const mockSessions: Session[] = [
     name: 'System Security Audit',
     type: 'Audit',
     status: 'scheduled',
-    sessionDate: '2024-01-20',
+    sessionDate: '2025-01-20',
     duration: '3 hours',
     rate: 150,
     totalAmount: 450,
-    lastModified: '2024-01-10'
+    lastModified: '2025-01-10'
   }
 ];
 

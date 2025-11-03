@@ -30,31 +30,31 @@ export const navItems: NavItem[] = [
       {
         title: 'Users Management',
         url: '/dashboard/users-management',
-        icon: 'userPen',
+        icon: 'users',
         shortcut: ['m', 'm']
       },
       {
         title: 'Document Type',
         url: '/dashboard/document-type',
-        icon: 'userPen',
+        icon: 'file',
         shortcut: ['m', 'm']
       },
       {
         title: 'Appointments',
         url: '/dashboard/appointments',
-        icon: 'userPen',
+        icon: 'clock',
         shortcut: ['m', 'm']
       },
       {
         title: 'Clients',
         url: '/dashboard/clients',
-        icon: 'userPen',
+        icon: 'briefcase',
         shortcut: ['m', 'm']
       },
       {
         title: 'Service Providers',
         url: '/dashboard/service-provider',
-        icon: 'userPen',
+        icon: 'user',
         shortcut: ['m', 'm']
       },
     ]
@@ -62,7 +62,7 @@ export const navItems: NavItem[] = [
   {
     title: 'AI Companion',
     url: '/dashboard/chatbot-support',
-    icon: 'dashboard',
+    icon: 'bot',
     isActive: false,
     shortcut: ['d', 'd'],
     items: []
@@ -71,7 +71,7 @@ export const navItems: NavItem[] = [
   {
     title: 'Workflow Setup',
     url: '/dashboard/workflow',
-    icon: 'kanban',
+    icon: 'merge',
     shortcut: ['k', 'k'],
     isActive: false,
     items: []
@@ -79,7 +79,15 @@ export const navItems: NavItem[] = [
   {
     title: 'Invoice Desk',
     url: '/dashboard/invoice-desk',
-    icon: 'kanban',
+    icon: 'scroll',
+    shortcut: ['k', 'k'],
+    isActive: false,
+    items: []
+  },
+  {
+    title: 'Api Integrations',
+    url: '/dashboard/api-integrations',
+    icon: 'workflow',
     shortcut: ['k', 'k'],
     isActive: false,
     items: []
