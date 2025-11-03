@@ -17,7 +17,7 @@ const META_THEME_COLORS = {
 };
 
 export const metadata: Metadata = {
-  title: 'ConvertIQ | B2B Lead Generation Platform',
+  title: 'Converze',
   description: 'B2B Lead Generation Platform'
 };
 

@@ -41,7 +41,7 @@ export function LoginForm({
   const slides = [
     {
       image: '/loginScreen/banner.png',
-      title: 'Welcome back to ConvertIQ – Your Growth Starts Here'
+      title: 'Welcome back to Converze – Your Growth Starts Here'
     },
     {
       image: '/loginScreen/banner.png',
@@ -60,8 +60,6 @@ export function LoginForm({
     return () => clearInterval(timer);
   }, []);
 
-  console.log("abhishek");
-  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);

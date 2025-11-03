@@ -13,8 +13,8 @@ export default function SecondContractDashboard() {
   return (
     <div className=''>
       <DonutChartCard
-        title='Contract Region'
-        total='10,000'
+        title='Cancellations by Service Stream'
+        total='1,460'
         data={chartData4}
       />
     </div>

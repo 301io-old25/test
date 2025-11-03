@@ -26,7 +26,9 @@ interface Question {
   id: number;
   title: string;
   icon: string;
+  answer: string;
 }
+
 const ChatBotSupport = () => {
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(
     null
@@ -34,14 +36,38 @@ const ChatBotSupport = () => {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const frequentQuestions = [
-    { id: 1, title: 'Rate Adjustments', icon: '📊' },
-    { id: 2, title: 'Scheduling Compliance', icon: '📅' },
-    { id: 3, title: 'Union-Specific Rules', icon: '👥' },
-    { id: 4, title: 'Schedule and Shift Related', icon: '🔄' }
+  const frequentQuestions: Question[] = [
+    {
+      id: 1,
+      title: 'Used two sessions under ABC. Can I book another?',
+      icon: '📊',
+      answer:
+        "Based on the company's EAP agreement, your allocation for legal support has been reached. Additional sessions can still be booked on a self-funded basis at a discounted rate."
+    },
+    {
+      id: 2,
+      title: 'Can I book both coaching & counselling under XYZ Finance?',
+      icon: '📅',
+      answer:
+        "Yes. Your organization's retainer contract allows employees to access multiple service streams. Coaching and counselling sessions are treated separately and can be used concurrently."
+    },
+    {
+      id: 3,
+      title: 'Can dependents access EAP under BrightGov?',
+      icon: '👥',
+      answer:
+        'Yes. Dependents are eligible for support sessions under the government contract. Each dependent may access up to two wellbeing sessions per calendar year.'
+    },
+    {
+      id: 4,
+      title: 'Are wellbeing webinars included in our NovaTech contract?',
+      icon: '🔄',
+      answer:
+        'Yes. Under your Custom Corporate Wellbeing Plan, quarterly webinars are included as part of the engagement package. Additional webinars can be arranged at the standard corporate rate.'
+    }
   ];
 
-  const handleQuestionSelect = (question: any) => {
+  const handleQuestionSelect = (question: Question) => {
     setSelectedQuestion(question);
   };
 
@@ -59,14 +85,14 @@ const ChatBotSupport = () => {
 
   return (
     <PageContainer scrollable={false}>
-      <div className='min-h-screen '>
+      <div className='min-h-screen'>
         <div className='mx-auto'>
           {/* Header */}
-          <div className='mb-8 '>
-            <h1 className='mb-2 text-black bg-clip-text text-4xl font-bold '>
+          <div className='mb-8'>
+            <h1 className='mb-2 bg-clip-text text-4xl font-bold text-black'>
               Document Management
             </h1>
-            <div className='flex items-center  gap-2'>
+            <div className='flex items-center gap-2'>
               <Sparkles className='h-5 w-5 text-[#00A345]' />
               <p className='text-lg text-slate-600'>
                 AI Decision Support Agent
@@ -118,6 +144,27 @@ const ChatBotSupport = () => {
                   </div>
                 </div>
 
+                {/* AI Response Area */}
+                {selectedQuestion && (
+                  <div className='rounded-lg border bg-slate-50 p-4'>
+                    <div className='mb-3 flex items-start justify-between'>
+                      <Badge variant='secondary' className='mb-2'>
+                        AI Response
+                      </Badge>
+                      <div className='flex gap-1'>
+                        <Button variant='ghost' size='sm'>
+                          <ThumbsUp className='h-4 w-4' />
+                        </Button>
+                        <Button variant='ghost' size='sm'>
+                          <ThumbsDown className='h-4 w-4' />
+                        </Button>
+                      </div>
+                    </div>
+                    <p className='text-sm text-slate-700'>
+                      {selectedQuestion.answer}
+                    </p>
+                  </div>
+                )}
                 {/* Custom Question */}
                 <div>
                   <h3 className='mb-3 text-sm font-medium text-slate-700'>
@@ -142,29 +189,6 @@ const ChatBotSupport = () => {
                     <ChevronRight className='ml-1 h-4 w-4' />
                   </Button>
                 </div>
-
-                {/* AI Response Area */}
-                {selectedQuestion && (
-                  <div className='rounded-lg border bg-slate-50 p-4'>
-                    <div className='mb-3 flex items-start justify-between'>
-                      <Badge variant='secondary' className='mb-2'>
-                        AI Response
-                      </Badge>
-                      <div className='flex gap-1'>
-                        <Button variant='ghost' size='sm'>
-                          <ThumbsUp className='h-4 w-4' />
-                        </Button>
-                        <Button variant='ghost' size='sm'>
-                          <ThumbsDown className='h-4 w-4' />
-                        </Button>
-                      </div>
-                    </div>
-                    <p className='text-sm text-slate-700'>
-                      Based on your documents, here information about{' '}
-                      {selectedQuestion.title.toLowerCase()}...
-                    </p>
-                  </div>
-                )}
               </CardContent>
             </Card>
 

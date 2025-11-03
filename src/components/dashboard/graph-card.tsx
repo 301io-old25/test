@@ -24,34 +24,19 @@ const data = [
   { month: 'Oct', value: 240 }
 ];
 
-const contractTypes = [
-  { name: 'Workshop', color: '#3b82f6' },
-  { name: 'Webinar', color: '#ef4444' },
-  { name: 'Psychometric', color: '#10b981' },
-  { name: 'Training', color: '#f59e0b' },
-  { name: 'Meditation', color: '#8b5cf6' }
-];
+
 
 export function ContractChart() {
   return (
     <div className='w-full space-y-6'>
       <Card>
         <CardHeader className='flex flex-col items-center justify-start'>
-          <CardTitle className='text-lg text-left font-semibold'>Contract Type</CardTitle>
-          <div className='flex gap-2'>
-            {contractTypes.map((contract) => (
-              <div key={contract.name} className='flex items-center gap-1'>
-                <div
-                  className='h-2 w-2 rounded-full'
-                  style={{ backgroundColor: contract.color }}
-                />
-                <span className='text-xs text-gray-600'>{contract.name}</span>
-              </div>
-            ))}
-          </div>
+          <CardTitle className='text-left text-lg font-semibold'>
+            Monthly Booked Appointments
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className='h-54'>
+          <div className='h-64'>
             <ResponsiveContainer width='100%' height='100%'>
               <BarChart
                 data={data}
@@ -85,29 +70,9 @@ export function ContractChart() {
           </div>
 
           {/* Y-axis labels */}
-          <div className='mt-4 flex items-end justify-between px-4'>
+          <div className='mt-4 flex items-end justify-evenly px-4'>
             <div className='flex flex-col items-center space-y-1'>
-              <span className='text-xs text-gray-500'>250</span>
-              <div className='h-px w-full bg-gray-200'></div>
-            </div>
-            <div className='flex flex-col items-center space-y-1'>
-              <span className='text-xs text-gray-500'>200</span>
-              <div className='h-px w-full bg-gray-200'></div>
-            </div>
-            <div className='flex flex-col items-center space-y-1'>
-              <span className='text-xs text-gray-500'>150</span>
-              <div className='h-px w-full bg-gray-200'></div>
-            </div>
-            <div className='flex flex-col items-center space-y-1'>
-              <span className='text-xs text-gray-500'>100</span>
-              <div className='h-px w-full bg-gray-200'></div>
-            </div>
-            <div className='flex flex-col items-center space-y-1'>
-              <span className='text-xs text-gray-500'>50</span>
-              <div className='h-px w-full bg-gray-200'></div>
-            </div>
-            <div className='flex flex-col items-center space-y-1'>
-              <span className='text-xs text-gray-500'>0</span>
+              <span className='text-xs text-gray-500 font-bold'>2025</span>
               <div className='h-px w-full bg-gray-200'></div>
             </div>
           </div>

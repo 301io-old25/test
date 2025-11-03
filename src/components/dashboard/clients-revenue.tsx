@@ -38,13 +38,11 @@ export const ClientsRevenue = () => {
             </div>
 
             {/* Text */}
-            <div className='flex items-end gap-2'>
-              <span className='text-3xl font-semibold text-gray-900'>
-                2,000
-              </span>
-              <span className='mb-[4px] text-sm text-gray-500'>
-                Total Clients
-              </span>
+            <div className=' items-end gap-2'>
+              <h3 className='mb-2 text-base font-medium text-gray-600'>
+                Total Expenditure
+              </h3>
+              <span className='mb-[4px]  text-[#00303f] text-xl font-bold'>$468,456</span>
             </div>
           </CardContent>
         </Card>
@@ -67,7 +65,7 @@ export const ClientsRevenue = () => {
                   state === 'collapsed' ? 'text-[36px]' : 'text-3xl'
                 } font-semibold text-[#00303f]`}
               >
-                $987,289.27
+                $662,243
               </span>
             </div>
 

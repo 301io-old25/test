@@ -57,11 +57,15 @@ import {
   Share2,
   Heart,
   ListChecks,
-  CreditCard
+  CreditCard,
+  Book,
+  Search,
+  Filter,
+  ChevronDown,
+  ChevronUp,
+  SlidersHorizontal
 } from 'lucide-react';
 import PageContainer from '@/components/layout/page-container';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 
 // Type Definitions
 interface Contact {
@@ -143,10 +147,24 @@ interface Metrics {
   totalCharge: number;
   cancellationRate: number;
 }
+
 interface ContractDialogState {
   open: boolean;
   client: Client | null;
 }
+
+interface AppointmentFilters {
+  personName: string;
+  service: string;
+  date: string;
+  time: string;
+  duration: string;
+  rate: string;
+  status: string;
+  cancellationHours: string;
+  refundStatus: string;
+}
+
 const InvoiceDesk = () => {
   const [selectedRegion, setSelectedRegion] = useState<string>('');
   const [selectedClient, setSelectedClient] = useState<string>('');
@@ -163,7 +181,45 @@ const InvoiceDesk = () => {
     open: false,
     client: null
   });
+  const [isFiltersOpen, setIsFiltersOpen] = useState<boolean>(false);
   const invoiceRef = useRef<HTMLDivElement>(null);
+
+  // Filter state for appointment table
+  const [appointmentFilters, setAppointmentFilters] =
+    useState<AppointmentFilters>({
+      personName: '',
+      service: '',
+      date: '',
+      time: '',
+      duration: 'all',
+      rate: '',
+      status: 'all',
+      cancellationHours: '',
+      refundStatus: 'all'
+    });
+
+  // Update filter function
+  const updateAppointmentFilter = (
+    key: keyof AppointmentFilters,
+    value: string
+  ) => {
+    setAppointmentFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  // Clear all appointment filters
+  const clearAppointmentFilters = () => {
+    setAppointmentFilters({
+      personName: '',
+      service: '',
+      date: '',
+      time: '',
+      duration: 'all',
+      rate: '',
+      status: 'all',
+      cancellationHours: '',
+      refundStatus: 'all'
+    });
+  };
 
   // Regions data
   const regions: Region[] = [
@@ -387,9 +443,77 @@ const InvoiceDesk = () => {
   const selectedClientData = clients.find(
     (client) => client.id === selectedClient
   );
-  const clientAppointments = appointments.filter(
-    (apt) => apt.clientId === selectedClient
-  );
+
+  // Filter appointments based on column filters
+  const clientAppointments = appointments
+    .filter((apt) => apt.clientId === selectedClient)
+    .filter((appointment) => {
+      const matchesPersonName =
+        appointmentFilters.personName === '' ||
+        appointment.personName
+          .toLowerCase()
+          .includes(appointmentFilters.personName.toLowerCase());
+
+      const matchesService =
+        appointmentFilters.service === '' ||
+        appointment.service
+          .toLowerCase()
+          .includes(appointmentFilters.service.toLowerCase());
+
+      const matchesDate =
+        appointmentFilters.date === '' ||
+        appointment.date.includes(appointmentFilters.date);
+
+      const matchesTime =
+        appointmentFilters.time === '' ||
+        appointment.time
+          .toLowerCase()
+          .includes(appointmentFilters.time.toLowerCase());
+
+      const matchesDuration =
+        appointmentFilters.duration === 'all' ||
+        (appointmentFilters.duration === 'short' &&
+          appointment.duration <= 30) ||
+        (appointmentFilters.duration === 'medium' &&
+          appointment.duration > 30 &&
+          appointment.duration <= 60) ||
+        (appointmentFilters.duration === 'long' && appointment.duration > 60);
+
+      const matchesRate =
+        appointmentFilters.rate === '' ||
+        appointment.rate.toString().includes(appointmentFilters.rate);
+
+      const matchesStatus =
+        appointmentFilters.status === 'all' ||
+        appointment.status === appointmentFilters.status;
+
+      const matchesCancellationHours =
+        appointmentFilters.cancellationHours === '' ||
+        (appointment.cancellation &&
+          appointment.cancellation.hoursBefore
+            .toString()
+            .includes(appointmentFilters.cancellationHours));
+
+      const matchesRefundStatus =
+        appointmentFilters.refundStatus === 'all' ||
+        (appointment.cancellation &&
+          appointment.cancellation.refundStatus ===
+            appointmentFilters.refundStatus) ||
+        (appointmentFilters.refundStatus === 'none' &&
+          !appointment.cancellation);
+
+      return (
+        matchesPersonName &&
+        matchesService &&
+        matchesDate &&
+        matchesTime &&
+        matchesDuration &&
+        matchesRate &&
+        matchesStatus &&
+        matchesCancellationHours &&
+        matchesRefundStatus
+      );
+    });
 
   // Calculate metrics
   const calculateMetrics = (): Metrics | null => {
@@ -518,8 +642,6 @@ const InvoiceDesk = () => {
   };
 
   const invoiceData = generateInvoiceData();
-
-  // PDF Download Functionality - OKLCH Compatible
 
   // Print Functionality
   const handlePrint = () => {
@@ -686,9 +808,7 @@ const InvoiceDesk = () => {
                   <FileText className='text-muted-foreground h-4 w-4' />
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>
-                    {metrics?.totalContracts}
-                  </div>
+                  <div className='text-2xl font-bold'>430</div>
                   <p className='text-muted-foreground text-xs'>
                     For selected period
                   </p>
@@ -702,25 +822,21 @@ const InvoiceDesk = () => {
                   <X className='text-muted-foreground h-4 w-4' />
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>
-                    {metrics?.cancelledContracts}
-                  </div>
+                  <div className='text-2xl font-bold'>47</div>
                   <p className='text-muted-foreground text-xs'>
-                    {metrics?.cancellationRate}% cancellation rate
+                    {((47 / 430) * 100).toFixed(1)} % cancellation rate
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    No Refund
+                    Not Refunded
                   </CardTitle>
-                  <DollarSign className='text-muted-foreground h-4 w-4' />
+                  <Book className='text-muted-foreground h-4 w-4' />
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>
-                    {metrics?.cancelledWithoutRefund}
-                  </div>
+                  <div className='text-2xl font-bold'>18</div>
                   <p className='text-muted-foreground text-xs'>
                     Late cancellations charged
                   </p>
@@ -734,9 +850,7 @@ const InvoiceDesk = () => {
                   <Eye className='text-muted-foreground h-4 w-4' />
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>
-                    {metrics?.pendingReview}
-                  </div>
+                  <div className='text-2xl font-bold'>5</div>
                   <p className='text-muted-foreground text-xs'>
                     Need cancellation review
                   </p>
@@ -745,15 +859,15 @@ const InvoiceDesk = () => {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Final Charge
+                    Refund Amount
                   </CardTitle>
                   <DollarSign className='text-muted-foreground h-4 w-4' />
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>
-                    ${metrics?.totalCharge}
-                  </div>
-                  <p className='text-muted-foreground text-xs'>Total revenue</p>
+                  <div className='text-2xl font-bold'>$2,250</div>
+                  <p className='text-muted-foreground text-xs'>
+                    For Pending Cancellations
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -819,15 +933,198 @@ const InvoiceDesk = () => {
                         All appointments for {selectedClientData.name}
                       </CardDescription>
                     </div>
-                    {metrics && metrics.pendingReview > 0 && (
-                      <Badge variant='test' className='flex items-center gap-1'>
-                        <Eye className='h-3 w-3' />
-                        {metrics.pendingReview} Need Review
-                      </Badge>
-                    )}
+                    <div className='flex items-center gap-2'>
+                      {metrics && metrics.pendingReview > 0 && (
+                        <Badge
+                          variant='test'
+                          className='flex items-center gap-1'
+                        >
+                          <Eye className='h-3 w-3' />
+                          {metrics.pendingReview} Need Review
+                        </Badge>
+                      )}
+                      <Button
+                        variant='outline'
+                        size='sm'
+                        onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                        className='cursor-pointer'
+                      >
+                        <SlidersHorizontal className='mr-2 h-4 w-4' />
+                        Filters
+                        {isFiltersOpen ? (
+                          <ChevronUp className='ml-1 h-4 w-4' />
+                        ) : (
+                          <ChevronDown className='ml-1 h-4 w-4' />
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
+                  {/* Appointment Filters */}
+                  <div
+                    className={`mb-6 space-y-4 ${isFiltersOpen ? 'block' : 'hidden'}`}
+                  >
+                    <div className='grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4'>
+                      {/* Person Name Filter */}
+                      <div className='space-y-2'>
+                        <Label className='text-xs font-medium'>
+                          Person Name
+                        </Label>
+                        <Input
+                          placeholder='Filter by name...'
+                          value={appointmentFilters.personName}
+                          onChange={(e) =>
+                            updateAppointmentFilter(
+                              'personName',
+                              e.target.value
+                            )
+                          }
+                          className='h-8 text-sm'
+                        />
+                      </div>
+
+                      {/* Service Filter */}
+                      <div className='space-y-2'>
+                        <Label className='text-xs font-medium'>Service</Label>
+                        <Input
+                          placeholder='Filter by service...'
+                          value={appointmentFilters.service}
+                          onChange={(e) =>
+                            updateAppointmentFilter('service', e.target.value)
+                          }
+                          className='h-8 text-sm'
+                        />
+                      </div>
+
+                      {/* Date Filter */}
+                      <div className='space-y-2'>
+                        <Label className='text-xs font-medium'>Date</Label>
+                        <Input
+                          type='date'
+                          value={appointmentFilters.date}
+                          onChange={(e) =>
+                            updateAppointmentFilter('date', e.target.value)
+                          }
+                          className='h-8 text-sm'
+                        />
+                      </div>
+
+                      {/* Time Filter */}
+                      <div className='space-y-2'>
+                        <Label className='text-xs font-medium'>Time</Label>
+                        <Input
+                          placeholder='Filter by time...'
+                          value={appointmentFilters.time}
+                          onChange={(e) =>
+                            updateAppointmentFilter('time', e.target.value)
+                          }
+                          className='h-8 text-sm'
+                        />
+                      </div>
+
+                      {/* Duration Filter */}
+                      <div className='space-y-2'>
+                        <Label className='text-xs font-medium'>Duration</Label>
+                        <Select
+                          value={appointmentFilters.duration}
+                          onValueChange={(value) =>
+                            updateAppointmentFilter('duration', value)
+                          }
+                        >
+                          <SelectTrigger className='h-8 text-sm'>
+                            <SelectValue placeholder='All durations' />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value='all'>All Durations</SelectItem>
+                            <SelectItem value='short'>
+                              Short (≤30 min)
+                            </SelectItem>
+                            <SelectItem value='medium'>
+                              Medium (31-60 min)
+                            </SelectItem>
+                            <SelectItem value='long'>Long (60 min)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Rate Filter */}
+                      <div className='space-y-2'>
+                        <Label className='text-xs font-medium'>Rate</Label>
+                        <Input
+                          placeholder='Filter by rate...'
+                          value={appointmentFilters.rate}
+                          onChange={(e) =>
+                            updateAppointmentFilter('rate', e.target.value)
+                          }
+                          className='h-8 text-sm'
+                        />
+                      </div>
+
+                      {/* Status Filter */}
+                      <div className='space-y-2'>
+                        <Label className='text-xs font-medium'>Status</Label>
+                        <Select
+                          value={appointmentFilters.status}
+                          onValueChange={(value) =>
+                            updateAppointmentFilter('status', value)
+                          }
+                        >
+                          <SelectTrigger className='h-8 text-sm'>
+                            <SelectValue placeholder='All status' />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value='all'>All Status</SelectItem>
+                            <SelectItem value='completed'>Completed</SelectItem>
+                            <SelectItem value='cancelled'>Cancelled</SelectItem>
+                            <SelectItem value='scheduled'>Scheduled</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Refund Status Filter */}
+                      <div className='space-y-2'>
+                        <Label className='text-xs font-medium'>
+                          Refund Status
+                        </Label>
+                        <Select
+                          value={appointmentFilters.refundStatus}
+                          onValueChange={(value) =>
+                            updateAppointmentFilter('refundStatus', value)
+                          }
+                        >
+                          <SelectTrigger className='h-8 text-sm'>
+                            <SelectValue placeholder='All refund status' />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value='all'>
+                              All Refund Status
+                            </SelectItem>
+                            <SelectItem value='full'>Full Refund</SelectItem>
+                            <SelectItem value='none'>No Refund</SelectItem>
+                            <SelectItem value='pending'>
+                              Pending Review
+                            </SelectItem>
+                            <SelectItem value='none'>Not Cancelled</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    {/* Clear Filters Button */}
+                    <div className='flex justify-end'>
+                      <Button
+                        variant='outline'
+                        size='sm'
+                        onClick={clearAppointmentFilters}
+                        className='cursor-pointer'
+                      >
+                        <X className='mr-2 h-3 w-3' />
+                        Clear Filters
+                      </Button>
+                    </div>
+                  </div>
+
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -932,6 +1229,12 @@ const InvoiceDesk = () => {
                       })}
                     </TableBody>
                   </Table>
+
+                  {clientAppointments.length === 0 && (
+                    <div className='text-muted-foreground py-8 text-center'>
+                      No appointments found matching your filters.
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -943,6 +1246,7 @@ const InvoiceDesk = () => {
                 onClick={() =>
                   setInvoiceDialog({ open: true, client: selectedClientData })
                 }
+                className='cursor-pointer bg-[#00A345] hover:bg-[#00A345]/10 hover:text-[#00A345]'
                 disabled={!invoiceData || invoiceData.items.length === 0}
               >
                 <Receipt className='mr-2 h-5 w-5' />

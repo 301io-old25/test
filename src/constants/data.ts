@@ -51,6 +51,12 @@ export const navItems: NavItem[] = [
         icon: 'userPen',
         shortcut: ['m', 'm']
       },
+      {
+        title: 'Service Providers',
+        url: '/dashboard/service-provider',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      },
     ]
   },
   {

@@ -29,11 +29,11 @@ export default function ContractDashboard() {
 
   return (
     <div className='grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3'>
-      <DonutChartCard title='Contract Type' total='10,000' data={chartData1} />
-      <DonutChartCard title='Service Stream' total='10,000' data={chartData2} />
+      <DonutChartCard title='Contract Type' total='200' data={chartData1} />
+      <DonutChartCard title='Appointments by Service Stream' total='8,540' data={chartData2} />
       <DonutChartCard
-        title='Contract Region'
-        total='10,000'
+        title='Contracts by Region'
+        total='200'
         data={chartData3}
       />
     </div>

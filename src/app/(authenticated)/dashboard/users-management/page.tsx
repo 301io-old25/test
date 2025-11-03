@@ -39,6 +39,31 @@ const newUserInitialValues: UserFormData = {
   isActive: 'true'
 };
 
+// Static data with 15 records
+const staticUsers = [
+  { id: 1, name: 'John Smith', email: 'john.smith@example.com', phone: '123-456-7890', roleId: '1', roleName: 'Admin', isActive: true },
+  { id: 2, name: 'Sarah Johnson', email: 'sarah.j@example.com', phone: '123-456-7891', roleId: '2', roleName: 'Manager', isActive: true },
+  { id: 3, name: 'Michael Brown', email: 'michael.b@example.com', phone: '123-456-7892', roleId: '2', roleName: 'Manager', isActive: false },
+  { id: 4, name: 'Emily Davis', email: 'emily.d@example.com', phone: '123-456-7893', roleId: '3', roleName: 'User', isActive: true },
+  { id: 5, name: 'David Wilson', email: 'david.w@example.com', phone: '123-456-7894', roleId: '1', roleName: 'Admin', isActive: true },
+  { id: 6, name: 'Jennifer Lee', email: 'jennifer.l@example.com', phone: '123-456-7895', roleId: '3', roleName: 'User', isActive: false },
+  { id: 7, name: 'Robert Taylor', email: 'robert.t@example.com', phone: '123-456-7896', roleId: '2', roleName: 'Manager', isActive: true },
+  { id: 8, name: 'Amanda Clark', email: 'amanda.c@example.com', phone: '123-456-7897', roleId: '3', roleName: 'User', isActive: true },
+  { id: 9, name: 'Christopher Martin', email: 'chris.m@example.com', phone: '123-456-7898', roleId: '1', roleName: 'Admin', isActive: false },
+  { id: 10, name: 'Jessica White', email: 'jessica.w@example.com', phone: '123-456-7899', roleId: '2', roleName: 'Manager', isActive: true },
+  { id: 11, name: 'Matthew Anderson', email: 'matt.a@example.com', phone: '123-456-7800', roleId: '3', roleName: 'User', isActive: true },
+  { id: 12, name: 'Elizabeth Thomas', email: 'elizabeth.t@example.com', phone: '123-456-7801', roleId: '3', roleName: 'User', isActive: false },
+  { id: 13, name: 'Daniel Harris', email: 'daniel.h@example.com', phone: '123-456-7802', roleId: '2', roleName: 'Manager', isActive: true },
+  { id: 14, name: 'Michelle Walker', email: 'michelle.w@example.com', phone: '123-456-7803', roleId: '1', roleName: 'Admin', isActive: true },
+  { id: 15, name: 'Kevin King', email: 'kevin.k@example.com', phone: '123-456-7804', roleId: '3', roleName: 'User', isActive: true }
+];
+
+const staticRoles = [
+  { roleId: 1, name: 'Admin' },
+  { roleId: 2, name: 'Manager' },
+  { roleId: 3, name: 'User' }
+];
+
 function UsersManagement() {
   const [users, setUsers] = useState<any[]>([]);
   const [roles, setRoles] = useState<any[]>([]);
@@ -64,34 +89,24 @@ function UsersManagement() {
 
   const fetchData = async (params?: any) => {
     setIsLoading(true);
-    const queryString = buildQueryParams(params);
     try {
-      const response = await GetCall(`/api/company/user?${queryString}`);
-      if (response.code === 'SUCCESS') {
-        setUsers(response.data);
-        setTotalRecords(response.total);
-      } else {
-        setUsers([]);
-        setTotalRecords(0);
-        toast.error('Failed to fetch users.');
-      }
+      // Use static data instead of API call
+      setTimeout(() => {
+        setUsers(staticUsers);
+        setTotalRecords(staticUsers.length);
+        setIsLoading(false);
+      }, 500); // Simulate loading delay
     } catch (err: any) {
       console.error('Error fetching data:', err);
       toast.error(err.message || 'An error occurred while fetching data.');
-    } finally {
       setIsLoading(false);
     }
   };
 
   const fetchRoles = async () => {
     try {
-      const response = await GetCall('/api/company/roles');
-      if (response.code === 'SUCCESS') {
-        setRoles(response.data);
-      } else {
-        setRoles([]);
-        toast.error('Failed to fetch roles.');
-      }
+      // Use static roles data instead of API call
+      setRoles(staticRoles);
     } catch (err: any) {
       console.error('Error fetching roles:', err);
       toast.error(err.message || 'An error occurred while fetching roles.');
@@ -245,21 +260,17 @@ function UsersManagement() {
 
     setIsDeleting(true);
     try {
-      const response = await DeleteCall(
-        `/api/company/user/${selectedUser.id}`
-      );
-      if (response.code === 'SUCCESS') {
-        toast.success(
-          `User "${selectedUser.name}" deleted successfully!`
-        );
+      // Simulate API call with static data
+      setTimeout(() => {
+        const updatedUsers = users.filter(user => user.id !== selectedUser.id);
+        setUsers(updatedUsers);
+        setTotalRecords(updatedUsers.length);
+        toast.success(`User "${selectedUser.name}" deleted successfully!`);
         handleCloseDeleteDialog();
-        handleRefresh();
-      } else {
-        toast.error(response.message || 'Failed to delete user.');
-      }
+        setIsDeleting(false);
+      }, 500);
     } catch (error: any) {
       toast.error(error.message || 'An error occurred during deletion.');
-    } finally {
       setIsDeleting(false);
     }
   };
@@ -273,31 +284,40 @@ function UsersManagement() {
         isActive: data.isActive === 'true'
       };
 
-      let response;
-      if (selectedUser) {
-        response = await PutCall(
-          `/api/company/user/${selectedUser.id}`,
-          submitData
-        );
-        if (response.code === 'SUCCESS') {
+      // Simulate API call with static data
+      setTimeout(() => {
+        if (selectedUser) {
+          // Update existing user
+          const updatedUsers = users.map(user => 
+            user.id === selectedUser.id 
+              ? { 
+                  ...user, 
+                  ...submitData, 
+                  id: selectedUser.id,
+                  roleName: staticRoles.find(role => role.roleId.toString() === data.roleId)?.name || 'User'
+                }
+              : user
+          );
+          setUsers(updatedUsers);
           toast.success('User updated successfully!');
-        }
-      } else {
-        response = await PostCall('/api/company/user', submitData);
-        if (response.code === 'SUCCESS') {
+        } else {
+          // Create new user
+          const newUser = {
+            id: users.length + 1,
+            ...submitData,
+            roleName: staticRoles.find(role => role.roleId.toString() === data.roleId)?.name || 'User'
+          };
+          setUsers([...users, newUser]);
+          setTotalRecords(users.length + 1);
           toast.success('User created successfully!');
         }
-      }
-
-      if (response.code === 'SUCCESS') {
+        
         handleCloseSheet();
-        handleRefresh();
-      } else {
-        toast.error(response.message || 'An error occurred.');
-      }
+        setIsSubmitting(false);
+      }, 500);
+
     } catch (error: any) {
       toast.error(error.message || 'An unexpected error occurred.');
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -315,7 +335,7 @@ function UsersManagement() {
           </div>
           <div className='flex gap-3'>
             <Button
-              className='cursor-pointer bg-[var(--primary-light)]'
+               className='cursor-pointer bg-[#00A345] hover:bg-[#00A345]/10 hover:text-[#00A345]'
               onClick={handleOpenCreateSheet}
             >
               + New User

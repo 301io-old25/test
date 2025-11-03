@@ -29,14 +29,14 @@ export const StatsGrid = () => {
       trend: 'positive' as const
     },
     {
-      title: 'Active Contracts',
-      value: '10,000',
+      title: 'Total Vendors',
+      value: '58',
       change: '3.5%',
       trend: 'positive' as const
     },
     {
-      title: 'Expiring Contracts',
-      value: '2,000',
+      title: 'Total Clients',
+      value: '200',
       change: '7.2%',
       trend: 'negative' as const
     }
