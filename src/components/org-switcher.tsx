@@ -55,7 +55,7 @@ export function OrgSwitcher({
               size='lg'
               className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground flex items-center justify-start'
             >
-              <div className='flex flex-col items-center justify-center'>
+              {/* <div className='flex flex-col items-center justify-center'>
                 {state === 'collapsed' && !openMobile ? (
                   <Image
                     src='/assets/icon-colored.svg'
@@ -76,7 +76,7 @@ export function OrgSwitcher({
               </div>
               {state === 'expanded' && openMobile && (
                 <Image src='/logo.svg' width={150} height={150} alt='Logo' />
-              )}
+              )} */}
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent

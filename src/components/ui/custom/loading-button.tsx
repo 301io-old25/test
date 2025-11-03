@@ -11,7 +11,11 @@ export function LoadingButton({
   ...props
 }: LoadingButtonProps) {
   return (
-    <Button disabled={isLoading || props.disabled} {...props}>
+    <Button
+      disabled={isLoading || props.disabled}
+      {...props}
+      className='cursor-pointer'
+    >
       {isLoading && <Spinner className='mr-2 h-4 w-4' />}
       {children}
     </Button>

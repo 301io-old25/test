@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { VariantProps, cva } from 'class-variance-authority';
-import { PanelLeftIcon } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -267,7 +266,7 @@ function SidebarTrigger({
       variant='ghost'
       size='icon'
       className={cn(
-        'size-7 p-0 lg:absolute lg:left-[-10px] lg:z-[99]',
+        'size-7 p-0 lg:absolute lg:left-[-10px] lg:z-[50]',
         className
       )}
       onClick={(event) => {
@@ -322,7 +321,7 @@ function SidebarInset({ className, ...props }: React.ComponentProps<'main'>) {
     <main
       data-slot='sidebar-inset'
       className={cn(
-        'bg-background relative flex w-full flex-1 flex-col',
+        'bg-background relative flex w-full min-w-0 flex-1 flex-col', //added min-w-0 and overflow-y-auto to fix overflow issue
         'md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2',
         className
       )}

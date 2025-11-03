@@ -77,20 +77,7 @@ export const getRowLimitWithScreenHeight = (
     footerHeight: 50
   }
 ) => {
-  return 60;
-};
-
-export const getReviewTagName = (name: any) => {
-  if (!name) name = '';
-  name = name
-    .replace('to Agency', '')
-    .replace('to Reckitt', '')
-    .replace('to Reckit', '');
-  return name
-    .trim()
-    .split(/\s+/)
-    .map((word: any) => (word ? word[0]?.toUpperCase() : ''))
-    .join('');
+  return 20;
 };
 
 export const goBack = (router: any) => {

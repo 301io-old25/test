@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
@@ -21,7 +21,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { LoadingButton } from '@/components/ui/custom/loading-button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { loginSuccess } from '@/store/slices/authSlice';
+// import { loginSuccess } from '@/store/slices/authSlice';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { PasswordInput } from '../ui/password-input';
@@ -30,7 +30,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -65,7 +65,7 @@ export function LoginForm({
     setIsLoading(true);
     setError(null);
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/global/api/auth/login`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/sign-in`;
       const res = await axios.post(
         apiUrl,
         { email, password },
@@ -73,7 +73,7 @@ export function LoginForm({
       );
       if (res.data?.code?.toLowerCase() === 'success') {
         toast.success('Signed In Successfully!');
-        dispatch(loginSuccess(res.data));
+        // dispatch(loginSuccess(res.data));
         router.push('/dashboard');
       } else if (res.data?.code?.toLowerCase() === 'auth_failed') {
         setError(
@@ -87,24 +87,26 @@ export function LoginForm({
     }
   };
 
+  const dummyRedirect = (e: any) => {
+    e.preventDefault();
+    router.push('/dashboard/overview');
+  };
+
   return (
     <div className='flex h-screen flex-col bg-white lg:flex-row'>
       {/* Left: Login Section */}
-      <div className='flex w-full flex-col justify-center px-6 sm:px-12 lg:w-[45%] lg:px-16'>
+      <div className='flex w-full flex-col justify-center px-6 '>
         <div className='mx-auto w-full max-w-md'>
           {/* Logo */}
           <div className='mb-3 flex justify-center'>
             <div className='flex justify-center rounded-xl bg-[#F6F6F6] p-2'>
-              <img
+              {/* <img
                 src={'/logo.svg'}
                 alt='Slide'
                 className='w-[85%] max-w-md object-contain drop-shadow-lg'
-              />
+              /> */}
             </div>
           </div>
-          <p className='mb-8 text-center text-sm text-gray-500 italic'>
-            Manage teams, campaigns, and performance
-          </p>
 
           {/* Card Form */}
           <Card className='mb-5 shadow-md'>
@@ -115,7 +117,7 @@ export function LoginForm({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={dummyRedirect}>
                 <FieldGroup className='gap-4'>
                   <Field>
                     <FieldLabel htmlFor='email'>Email</FieldLabel>
@@ -200,9 +202,7 @@ export function LoginForm({
         </div>
       </div>
 
-      {/* Right: Image Carousel */}
-      <div className='relative hidden items-center justify-center overflow-hidden lg:flex lg:w-[55%]'>
-        {/* Background Image */}
+      {/* <div className='relative hidden items-center justify-center overflow-hidden lg:flex lg:w-[55%]'>
         <Image
           src='/loginScreen/login-background.svg'
           alt='Login Background'
@@ -210,7 +210,6 @@ export function LoginForm({
           className='object-cover'
         />
 
-        {/* Centered Carousel */}
         <div className='relative z-10 flex h-full w-full flex-col items-center justify-center'>
           <div className='relative flex w-full max-w-lg items-center justify-center'>
             {slides.map((slide, index) => (
@@ -235,7 +234,6 @@ export function LoginForm({
           </div>
         </div>
 
-        {/* Dots Indicator */}
         <div className='absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 transform gap-2'>
           {slides.map((_, index) => (
             <button
@@ -247,7 +245,7 @@ export function LoginForm({
             />
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

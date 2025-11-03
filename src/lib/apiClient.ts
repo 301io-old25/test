@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import { log } from 'console';
 import { get as lodashGet } from 'lodash';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -29,10 +30,10 @@ class ApiClientError extends Error {
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json'
-  }
+  withCredentials: true
+  // headers: {
+  //   'Content-Type': 'application/json'
+  // }
 });
 
 apiClient.interceptors.response.use(
@@ -66,6 +67,50 @@ apiClient.interceptors.response.use(
     }
 
     // Reject with a structured custom error
+    return Promise.reject(
+      new ApiClientError(errorMessage, statusCode, errorData)
+    );
+  }
+);
+
+const apiClientFileDownload = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 30000,
+  withCredentials: true
+});
+
+// IMPORTANT: Add the ERROR interceptor to the new client as well,
+// but NOT the success interceptor that returns response.data
+apiClientFileDownload.interceptors.response.use(
+  (response: AxiosResponse) => {
+    // For this client, we return the full response object
+    // or let it pass through to allow direct access to headers
+    return response;
+  },
+  (error: AxiosError) => {
+    // Re-use the same error handling logic
+    const response = error.response;
+    let errorMessage = 'An unexpected error occurred. Please try again.';
+    let statusCode = 500;
+    let errorData = null;
+
+    if (response) {
+      statusCode = response.status;
+      errorData = response.data;
+      errorMessage =
+        lodashGet(response.data, 'message') ||
+        lodashGet(response.data, 'error') ||
+        error.message;
+
+      if (statusCode === 401) {
+        console.error('Authentication error. You may need to log in again.');
+      }
+    } else if (error.request) {
+      errorMessage =
+        'The server is not responding. Please check your network connection.';
+      statusCode = 503;
+    }
+
     return Promise.reject(
       new ApiClientError(errorMessage, statusCode, errorData)
     );
@@ -115,6 +160,8 @@ const handleFileDownload = (
   response: AxiosResponse,
   defaultFilename: string
 ) => {
+  console.log('called');
+
   const contentDisposition = response.headers['content-disposition'];
   let filename = defaultFilename;
 
@@ -130,6 +177,7 @@ const handleFileDownload = (
   link.href = url;
   link.setAttribute('download', filename);
   document.body.appendChild(link);
+  // window.open(url, '_blank');
   link.click();
   link.remove();
   window.URL.revokeObjectURL(url);
@@ -141,7 +189,7 @@ export const GetPdfCall = async (
   headers: object = {}
 ) => {
   try {
-    const response = await apiClient.get(url, {
+    const response = await apiClientFileDownload.get(url, {
       headers,
       responseType: 'blob'
     });
@@ -162,7 +210,7 @@ export const PostPdfCall = async (
   headers: object = {}
 ) => {
   try {
-    const response = await apiClient.post(url, payload, {
+    const response = await apiClientFileDownload.post(url, payload, {
       headers,
       responseType: 'blob'
     });
@@ -183,13 +231,46 @@ export const GetExcelCall = async (
   headers: object = {}
 ) => {
   try {
-    const response = await apiClient.get(url, {
+    // Use the new client here
+    const response = await apiClientFileDownload.get(url, {
       headers,
       responseType: 'blob'
     });
+
+    // NOW response.headers WILL BE DEFINED!
+    const contentDisposition = response.headers['content-disposition'];
+    let finalFilename = filename;
+
+    if (contentDisposition) {
+      const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+      if (filenameMatch && filenameMatch.length > 1) {
+        finalFilename = filenameMatch[1];
+      }
+    }
+
     const contentType = response.headers['content-type'];
-    const extension = contentType?.includes('ms-excel') ? 'xls' : 'xlsx';
-    handleFileDownload(response, `${filename}.${extension}`);
+    let extension = 'xlsx';
+    if (
+      contentType?.includes('ms-excel') ||
+      contentType?.includes('application/vnd.ms-excel')
+    ) {
+      extension = 'xls';
+    } else if (
+      contentType?.includes('spreadsheetml') ||
+      contentType?.includes(
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      )
+    ) {
+      extension = 'xlsx';
+    } else if (contentType?.includes('csv')) {
+      extension = 'csv';
+    }
+
+    if (!finalFilename.includes('.')) {
+      finalFilename = `${finalFilename}.${extension}`;
+    }
+
+    handleFileDownload(response, finalFilename);
     return { code: 'SUCCESS', message: 'File downloaded successfully' };
   } catch (error: any) {
     return {

@@ -26,7 +26,8 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarRail
+  SidebarRail,
+  useSidebar
 } from '@/components/ui/sidebar';
 import { UserAvatarProfile } from '@/components/user-avatar-profile';
 import { navItems } from '@/constants/data';
@@ -44,33 +45,21 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
-import { OrgSwitcher } from '../org-switcher';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
+// import { useSelector } from 'react-redux';
+// import { RootState } from '@/store';
 import { SignOutButton } from '../auth/sign-out-button';
-export const company = {
-  name: 'Acme Inc',
-  logo: IconPhotoUp,
-  plan: 'Enterprise'
-};
-
-const tenants = [
-  { id: '1', name: 'Acme Inc' },
-  { id: '2', name: 'Beta Corp' },
-  { id: '3', name: 'Gamma Ltd' }
-];
+import Image from 'next/image';
 
 export default function AppSidebar() {
   const pathname = usePathname();
   const { isOpen } = useMediaQuery();
   const router = useRouter();
-  const user = useSelector((state: RootState) => state.auth.user);
-
-  const handleSwitchTenant = (_tenantId: string) => {
-    // Tenant switching functionality would be implemented here
-  };
-
-  const activeTenant = tenants[0];
+  // const user = useSelector((state: RootState) => state.auth.user);
+  const { state, openMobile } = useSidebar();
+const user = {
+    name: 'John Doe',
+    email: ' '
+}
 
   React.useEffect(() => {
     // Side effects based on sidebar state changes
@@ -79,11 +68,30 @@ export default function AppSidebar() {
   return (
     <Sidebar collapsible='icon'>
       <SidebarHeader>
-        <OrgSwitcher
-          tenants={tenants}
-          defaultTenant={activeTenant}
-          onTenantSwitch={handleSwitchTenant}
-        />
+        <div className='flex flex-col items-center justify-start'>
+          {state === 'collapsed' && !openMobile ? (
+            <Image
+              src='/conv-icon.svg'
+              width={22}
+              height={22}
+              alt='Logo'
+              className=''
+            />
+          ) : (
+            <Image
+              src='/conv.svg'
+              width={150}
+              height={150}
+              alt='Logo'
+              className='flex justify-start'
+            />
+          )}
+        </div>
+
+     {state === 'expanded' && openMobile && (
+          <Image src='/conv.svg' width={150} height={150} alt='Logo' />
+        )
+        } 
       </SidebarHeader>
       <SidebarContent className='overflow-x-hidden'>
         <SidebarGroup>
@@ -116,9 +124,15 @@ export default function AppSidebar() {
                             <SidebarMenuSubButton
                               asChild
                               isActive={pathname === subItem.url}
+                              className='border-1 border-transparent transition-colors hover:bg-gray-100 data-[active=true]:border-[#00A345] data-[active=true]:bg-[#EDFFF4] dark:hover:bg-gray-800 dark:data-[active=true]:bg-[#00A345]'
                             >
                               <Link href={subItem.url}>
-                                <span>{subItem.title}</span>
+                                <span
+                                  data-active={pathname === subItem.url}
+                                  className='data-[active=true]:text-[#00A345] dark:data-[active=true]:text-[#ffffff]'
+                                >
+                                  {subItem.title}
+                                </span>
                               </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
@@ -133,10 +147,19 @@ export default function AppSidebar() {
                     asChild
                     tooltip={item.title}
                     isActive={pathname === item.url}
+                    className='border-1 border-transparent transition-colors hover:bg-gray-100 data-[active=true]:border-[#00A345] data-[active=true]:bg-[#EDFFF4] dark:hover:bg-gray-800 dark:data-[active=true]:bg-[#00A345]'
                   >
                     <Link href={item.url}>
-                      <Icon />
-                      <span>{item.title}</span>
+                      <Icon
+                        data-active={pathname === item.url}
+                        className='data-[active=true]:text-[#00A345] dark:data-[active=true]:text-[#ffffff]'
+                      />
+                      <span
+                        data-active={pathname === item.url}
+                        className='data-[active=true]:text-[#00A345] dark:data-[active=true]:text-[#ffffff]'
+                      >
+                        {item.title}
+                      </span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -204,7 +227,7 @@ export default function AppSidebar() {
                   <IconLogout className='mr-2 h-4 w-4' />
                   {/* <SignOutButton redirectUrl='/auth/sign-in' /> */}
                   {/* Sign Out */}
-                  <SignOutButton />
+                  {/* <SignOutButton /> */}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
