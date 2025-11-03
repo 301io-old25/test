@@ -17,7 +17,7 @@ const META_THEME_COLORS = {
 };
 
 export const metadata: Metadata = {
-  title: 'Converze',
+  title: 'Converge',
   description: 'B2B Lead Generation Platform'
 };
 

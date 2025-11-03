@@ -34,7 +34,7 @@ export default function IconLoader() {
         </div>
       </div>
       <p className='animate-pulse text-sm font-medium text-slate-50'>
-        Loading Converze 100% ...
+        Loading Converge 100% ...
       </p>
     </div>
   );

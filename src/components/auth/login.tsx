@@ -41,7 +41,7 @@ export function LoginForm({
   const slides = [
     {
       image: '/loginScreen/banner.png',
-      title: 'Welcome back to Converze – Your Growth Starts Here'
+      title: 'Welcome back to Converge – Your Growth Starts Here'
     },
     {
       image: '/loginScreen/banner.png',
